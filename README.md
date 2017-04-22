@@ -4,8 +4,11 @@ Using a bot to update the event from Slack.
 modify the file /opt/IBM/tivoli/netcool/omnibus/etc/AGG_P.props
 
 NHttpd.EnableHTTP: TRUE
+
 NHttpd.ListeningPort: 7070
+
 NRestOS.Enable: TRUE	
+
 2.	Restart the objectserver with the following commands:
 /opt/IBM/tivoli/netcool/omnibus/bin/nco_pa_stop -process MasterObjectServer
 /opt/IBM/tivoli/netcool/omnibus/bin/nco_pa_stop -process MasterObjectServer
