@@ -78,14 +78,21 @@ HubotSlack = require 'hubot-slack'
 noiChannelName = ""
 
 omnibusConnection = omnibus.createConnection(
+
    host: process.env.HUBOT_OMNIBUS_HOST
+   
    port: '8080'
+   
    user: process.env.HUBOT_OMNIBUS_USER
+   
    password: process.env.HUBOT_OMNIBUS_PASSWORD)
+   
 
 module.exports = (robot) ->
+
 robot.hear /noi ack (.*)/i, (msg) ->
 		sql = 'UPDATE alerts.status set Acknowledged = where Serial=' +  msg.match[1]
+		
         omnibusConnection.sqlCommand sql, (err, rows, numrows, coldesc) ->
 		    console.log "err:" + err
 			if numrows == 0
@@ -93,7 +100,8 @@ robot.hear /noi ack (.*)/i, (msg) ->
 				msg.send "Perhaps the event has been closed already? Otherwise, try another serial number."
 			else
 				msg.send "Event acknowledged"      
-				
+	
+	
 	robot.hear /noi deack (.*)/i, (msg) ->
         sql = 'UPDATE alerts.status set Acknowledged = 0 where Serial=' +  msg.match[1]
         omnibusConnection.sqlCommand sql, (err, rows, numrows, coldesc) ->
@@ -106,7 +114,8 @@ robot.hear /noi ack (.*)/i, (msg) ->
 
 11.	Run the bot using the command 
 
-HUBOT_OMNIBUS_PASSWORD= HUBOT_OMNIBUS_HOST=localhost PORT=7070 HUBOT_SLACK_TOKEN=<<YOURTOKENHERE>> ./bin/hubot --adapter slack
+HUBOT_OMNIBUS_PASSWORD= HUBOT_OMNIBUS_HOST=localhost PORT=7070 HUBOT_SLACK_TOKEN=<<YOURTOKENHERE>> 
+./bin/hubot --adapter slack
 
 12.	From the Slack window, invite the bot to your slack channel with the command /invite <botname>
 
