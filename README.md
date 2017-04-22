@@ -10,29 +10,46 @@ NHttpd.ListeningPort: 7070
 NRestOS.Enable: TRUE	
 
 2.	Restart the objectserver with the following commands:
+
 /opt/IBM/tivoli/netcool/omnibus/bin/nco_pa_stop -process MasterObjectServer
+
 /opt/IBM/tivoli/netcool/omnibus/bin/nco_pa_stop -process MasterObjectServer
 
 Use the root password when asked.
 
 3.	Test that you have remote access by running the command 
+
 telnet localhost 7070
 4.	Open a cmd window and run the following commands as root:
 
 curl -sL https://rpm.nodesource.com/setup_6.x |sudo -E bash -
+
 yum install -y nodejs
+
 These commands install node.js to the server
+
 5.	Run the following command as root:
+
 npm install -g yo generator-hubot
+
 This command installs a bot "generator".
+
 6.	Run the following command as root:
+
 npm install -g node-omnibus
+
 This command installs a node.js library that can converse with the ObjectServer over REST
+
 7.	The following commands must be run as localuser
+
 su localuser
+
 cd ~
+
 mkdir bot
+
 cd bot
+
 yo hubot
  
 8.	Enter your own details for the bot name and description, choose "slack" as the adaptor type
