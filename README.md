@@ -51,22 +51,32 @@ mkdir bot
 cd bot
 
 yo hubot
+
  
 8.	Enter your own details for the bot name and description, choose "slack" as the adaptor type
+
  
 9.	Run the command "ls -ltr" and you will see the following files:
+
  
 10.	Edit the file package.json and add a dependency to the node-omnibus component: 
+
     "node-omnibus": "^0.1.1"
+    
  
 Create the file noi.coffee in the ./scripts subdirectory and insert the following code into it:
+
 console.log ('Omnibus = ' + process.env.HUBOT_OMNIBUS_HOST)
 
 omnibus = require('node-omnibus')
+
 request = require('request')
+
 HubotSlack = require 'hubot-slack'
 
+
 noiChannelName = ""
+
 omnibusConnection = omnibus.createConnection(
    host: process.env.HUBOT_OMNIBUS_HOST
    port: '8080'
@@ -95,10 +105,15 @@ robot.hear /noi ack (.*)/i, (msg) ->
 				msg.send "Event de-acknowledged"
 
 11.	Run the bot using the command 
+
 HUBOT_OMNIBUS_PASSWORD= HUBOT_OMNIBUS_HOST=localhost PORT=7070 HUBOT_SLACK_TOKEN=<<YOURTOKENHERE>> ./bin/hubot --adapter slack
+
 12.	From the Slack window, invite the bot to your slack channel with the command /invite <botname>
+
 13.	In the DASH event viewer, choose an event and view it’s details to find the Serial number. Run the command "noi ack <serial#>" in the Slack command and verify that it has been acknowledged in the DASH event viewer.
+
 14.	Stop the bot using ctrl-C and update the file noi.coffee with the following rows:
+
 
     robot.hear /noi journal (.*?) (.*)/i, (msg) ->
 		dt = Date.now()
@@ -110,7 +125,9 @@ HUBOT_OMNIBUS_PASSWORD= HUBOT_OMNIBUS_HOST=localhost PORT=7070 HUBOT_SLACK_TOKEN
 			msg.send "Journal entry added"
 
 15.	Start the bot and run the command "noi journal <serial#> This is a test". Check in the event viewer to see if the event's journal has been updated.
+
 16.	Stop the bot using ctrl-C and update the file noi.coffee with the following rows:
+
    
 	robot.hear /noi sev (\d) (.*)/i, (msg) ->
         sql = 'UPDATE alerts.status set Severity = ' + msg.match[1] + '  where Serial=' +  msg.match[2]
@@ -124,15 +141,20 @@ HUBOT_OMNIBUS_PASSWORD= HUBOT_OMNIBUS_HOST=localhost PORT=7070 HUBOT_SLACK_TOKEN
 
 
 17.	Start the bot and run the command "noi sev <serial#> 5". Check in the event viewer to see if the event's priority has been changed to Critical/Red.
+
 18.	Stop the bot using ctrl-C and update the file noi.coffee with the following rows:
+
 
 robot.hear /noi resolve (.*)/i, (msg) ->
 		sql = 'UPDATE alerts.status set Severity = 0,CASE_ICD_Status=\'RESOLVED\'  where Serial=' +  msg.match[1]
         omnibusConnection.sqlCommand sql, (err, rows, numrows, coldesc) ->
 			console.log "Err=" + err
 			msg.send "Event resolved (Severity set to 0)"
+			
 19.	Start the bot and run the command "noi resolve <serial#>". Check in the event viewer to see if the event's priority has been changed to Clear/Green.
+
 20.	Stop the bot using ctrl-C and update the file noi.coffee with the following rows:
+
 
 	robot.hear /noi show (.*)/i, (msg) ->
 		query = 'SELECT Serial, Summary, Severity, Node, Acknowledged, LastOccurrence from alerts.status where Serial=' +  msg.match[1]
@@ -164,5 +186,6 @@ robot.hear /noi resolve (.*)/i, (msg) ->
 				} ]
 				username: process.env.HUBOT_SLACK_BOTNAME
 				as_user: true
+				
 				
 21.	Start the bot and run the command "noi show <serial#> "
